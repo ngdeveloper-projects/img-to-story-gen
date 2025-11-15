@@ -113,11 +113,48 @@ export async function generateStory(imageFile, modelName = null) {
     return response.message?.content || 'Unable to generate story at this time.'
   } catch (error) {
     console.error('Error generating story:', error)
-    if (error.message?.includes('ECONNREFUSED') || error.cause?.code === 'ECONNREFUSED') {
+    
+    const errorMsg = error.message || String(error) || ''
+    
+    // Check for connection errors
+    if (errorMsg.includes('ECONNREFUSED') || error.cause?.code === 'ECONNREFUSED') {
       throw new Error(
         'Cannot connect to Ollama. Please make sure Ollama is running on http://localhost:11434'
       )
     }
+    
+    // Check for model runner stopped errors (resource limitations)
+    if ((errorMsg.includes('model runner') && errorMsg.includes('stopped')) || 
+        errorMsg.includes('unexpectedly stopped') ||
+        errorMsg.includes('resource limitations') ||
+        errorMsg.includes('internal error')) {
+      throw new Error(
+        `Model runner stopped - likely due to insufficient resources.\n\n` +
+        `This usually means:\n` +
+        `1. Not enough RAM for the selected model\n` +
+        `2. Model is too large for your system\n` +
+        `3. Other applications using too much memory\n\n` +
+        `Solutions:\n` +
+        `- Try a smaller model (moondream ~1.6GB requires only 4GB RAM)\n` +
+        `- Close other applications to free up RAM\n` +
+        `- Restart Ollama: Stop 'ollama serve' and start it again\n` +
+        `- Check available RAM: You need at least ${modelInfo.minRAM} for ${selectedModel}\n` +
+        `- Check Ollama server logs in the terminal where 'ollama serve' is running`
+      )
+    }
+    
+    // Check for out of memory errors
+    if (errorMsg.includes('out of memory') || errorMsg.includes('OOM') || errorMsg.includes('memory')) {
+      throw new Error(
+        `Out of memory error. The model requires more RAM than available.\n\n` +
+        `Solutions:\n` +
+        `- Switch to a smaller model (try moondream which only needs 4GB RAM)\n` +
+        `- Close other applications to free up memory\n` +
+        `- Restart your computer to free up memory\n` +
+        `- Current model (${selectedModel}) requires ${modelInfo.minRAM} RAM`
+      )
+    }
+    
     throw error
   }
 }

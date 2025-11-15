@@ -375,6 +375,69 @@ This is the most common issue. Here's how to fix it:
 
 **Pro Tip**: Always download models manually before using the app. It's faster and more reliable than automatic downloads.
 
+#### Model Runner Stopped ⚠️
+**Problem**: "Model runner has unexpectedly stopped" or "resource limitations" error
+
+This error occurs when the model crashes due to insufficient system resources.
+
+**Why this happens:**
+- Not enough RAM for the selected model
+- Model is too large for your system
+- Other applications using too much memory
+- System running out of resources
+
+**✅ Solutions (try in this order):**
+
+1. **Switch to a Smaller Model** (Most Important):
+   ```bash
+   # Try the smallest model first
+   ollama pull moondream
+   ```
+   Then select `moondream` in the app dropdown. This model only needs 4GB RAM.
+
+2. **Check Your RAM**:
+   - **macOS**: Activity Monitor > Memory tab
+   - **Windows**: Task Manager > Performance > Memory
+   - Ensure you have enough free RAM (not just total RAM)
+   - Models need the minimum RAM listed in the [Available Models](#available-models) table
+
+3. **Close Other Applications**:
+   - Close browser tabs, video editors, games, etc.
+   - Free up as much RAM as possible
+   - Especially close other AI/ML applications
+
+4. **Restart Ollama**:
+   ```bash
+   # Stop Ollama (Ctrl+C in the terminal where it's running)
+   # Then start it again
+   ollama serve
+   ```
+
+5. **Restart Your Computer**:
+   - Sometimes memory gets fragmented
+   - A fresh restart can free up resources
+
+6. **Check Ollama Logs**:
+   - Look at the terminal where `ollama serve` is running
+   - Check for specific error messages
+   - Look for memory-related errors
+
+7. **Verify Model Requirements**:
+   - Check the [Available Models](#available-models) table
+   - Ensure your system meets the minimum RAM requirement
+   - If you have 8GB RAM, use `moondream` or `llava:7b`, not `llava:13b`
+
+**Model RAM Requirements:**
+- `moondream`: 4 GB minimum
+- `llava:7b`: 8 GB minimum
+- `llava:13b`: 16 GB minimum
+- `llava:34b`: 32 GB minimum
+
+**If the error persists:**
+- The model you're trying to use is too large for your system
+- Always start with `moondream` (smallest model)
+- Only upgrade to larger models if you have sufficient RAM
+
 #### Slow Generation
 **Problem**: Story generation takes a long time
 
@@ -382,6 +445,7 @@ This is the most common issue. Here's how to fix it:
 - Story generation typically takes 30-60 seconds depending on your hardware
 - Ensure you have sufficient RAM (8GB+ recommended)
 - Close other resource-intensive applications
+- Smaller models (moondream) generate faster than larger ones
 
 #### Port Already in Use
 **Problem**: Port 5173 is already in use
