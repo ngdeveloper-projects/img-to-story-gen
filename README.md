@@ -13,9 +13,27 @@ A React application that generates creative stories from uploaded images using O
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
-- Ollama installed and running on your system
-- Git (for cloning the repository)
+Before you begin, make sure you have:
+
+- **Node.js** (v16 or higher) - [Download here](https://nodejs.org/)
+- **Ollama** installed and running on your system
+- **Git** (for cloning the repository)
+- **Stable internet connection** (for downloading models)
+- **At least 5 GB free disk space** (for models)
+
+---
+
+## Quick Start Guide
+
+**For first-time users, follow these steps in order:**
+
+1. ✅ Install Ollama (see installation guide below)
+2. ✅ Start Ollama service (`ollama serve`)
+3. ✅ Clone and setup the project
+4. ✅ **Download a model manually** (recommended to avoid network issues)
+5. ✅ Run the application (`npm run dev`)
+
+**Important**: We strongly recommend downloading a model manually (Step 4) before running the app to avoid network timeout issues. The app can download models automatically, but manual download is more reliable.
 
 ---
 
@@ -62,29 +80,37 @@ cd img-to-story-gen
 npm install
 ```
 
-#### Step 4: Pull a Vision Model (Optional)
+#### Step 4: Download a Vision Model (Highly Recommended)
 
-The app supports multiple vision models ranging from very small (~1.6 GB) to medium (~7.5 GB). You can select your preferred model in the UI dropdown.
+**⚠️ Important**: Download a model manually before running the app to avoid network timeout issues. The app can download models automatically, but manual download is more reliable and faster.
 
-**Recommended models for different setups:**
+**Choose a model based on your machine:**
 
-- **Low-resource machines (4-8 GB RAM)**: `moondream` (~1.6 GB) ⭐
-- **Standard machines (8-16 GB RAM)**: `llava:7b` (~4.5 GB) ⭐
-- **High-resource machines (16+ GB RAM)**: `llava:13b` (~7.5 GB)
+| Your Machine | Recommended Model | Command |
+|--------------|------------------|---------|
+| **Low-resource (4-8 GB RAM)** | `moondream` ⭐ | `ollama pull moondream` |
+| **Standard (8-16 GB RAM)** | `llava:7b` ⭐ | `ollama pull llava:7b` |
+| **High-resource (16+ GB RAM)** | `llava:13b` | `ollama pull llava:13b` |
 
-The app will automatically pull the selected model on first use, but you can pre-download it:
+**Download the model:**
+
 ```bash
-# For very small model (recommended for low-resource machines)
+# Start with the smallest model (recommended for first-time users)
 ollama pull moondream
-
-# For small model (recommended for most users)
-ollama pull llava:7b
-
-# For medium model (better quality, requires more resources)
-ollama pull llava:13b
 ```
 
-See the [Available Models](#available-models) section for a complete list.
+**What to expect:**
+- Download time: 2-10 minutes depending on your internet speed
+- Model size: ~1.6 GB for moondream, ~4.5 GB for llava:7b
+- Progress: You'll see download progress in the terminal
+- If download fails: See [Troubleshooting](#troubleshooting) section below
+
+**After download completes:**
+- The model is now ready to use
+- You can select it in the app's dropdown menu
+- No need to download again
+
+**Note**: You can download multiple models and switch between them in the app. See [Available Models](#available-models) for a complete list.
 
 #### Step 5: Run the Application
 
@@ -140,29 +166,37 @@ cd img-to-story-gen
 npm install
 ```
 
-#### Step 4: Pull a Vision Model (Optional)
+#### Step 4: Download a Vision Model (Highly Recommended)
 
-The app supports multiple vision models ranging from very small (~1.6 GB) to medium (~7.5 GB). You can select your preferred model in the UI dropdown.
+**⚠️ Important**: Download a model manually before running the app to avoid network timeout issues. The app can download models automatically, but manual download is more reliable and faster.
 
-**Recommended models for different setups:**
+**Choose a model based on your machine:**
 
-- **Low-resource machines (4-8 GB RAM)**: `moondream` (~1.6 GB) ⭐
-- **Standard machines (8-16 GB RAM)**: `llava:7b` (~4.5 GB) ⭐
-- **High-resource machines (16+ GB RAM)**: `llava:13b` (~7.5 GB)
+| Your Machine | Recommended Model | Command |
+|--------------|------------------|---------|
+| **Low-resource (4-8 GB RAM)** | `moondream` ⭐ | `ollama pull moondream` |
+| **Standard (8-16 GB RAM)** | `llava:7b` ⭐ | `ollama pull llava:7b` |
+| **High-resource (16+ GB RAM)** | `llava:13b` | `ollama pull llava:13b` |
 
-The app will automatically pull the selected model on first use, but you can pre-download it:
+**Download the model:**
+
 ```powershell
-# For very small model (recommended for low-resource machines)
+# Start with the smallest model (recommended for first-time users)
 ollama pull moondream
-
-# For small model (recommended for most users)
-ollama pull llava:7b
-
-# For medium model (better quality, requires more resources)
-ollama pull llava:13b
 ```
 
-See the [Available Models](#available-models) section for a complete list.
+**What to expect:**
+- Download time: 2-10 minutes depending on your internet speed
+- Model size: ~1.6 GB for moondream, ~4.5 GB for llava:7b
+- Progress: You'll see download progress in the terminal
+- If download fails: See [Troubleshooting](#troubleshooting) section below
+
+**After download completes:**
+- The model is now ready to use
+- You can select it in the app's dropdown menu
+- No need to download again
+
+**Note**: You can download multiple models and switch between them in the app. See [Available Models](#available-models) for a complete list.
 
 #### Step 5: Run the Application
 
@@ -176,13 +210,44 @@ Open your browser and navigate to `http://localhost:5173`
 
 ## Usage
 
-1. **Select AI Model**: Choose your preferred vision model from the dropdown at the top (see [Available Models](#available-models) for recommendations)
-2. **Upload an Image**: Click the upload area or drag and drop an image file
-3. **Generate Story**: Click the "✨ Generate Story" button
-4. **View Results**: The generated story will appear below the image
-5. **Copy or Download**: Use the copy or download buttons to save your story
+### Step-by-Step Guide
 
-**Note**: The first time you use a model, it will be automatically downloaded. This may take a few minutes depending on the model size and your internet connection.
+1. **Start Ollama** (if not already running):
+   ```bash
+   ollama serve
+   ```
+   Keep this terminal window open.
+
+2. **Start the App**:
+   ```bash
+   npm run dev
+   ```
+   Open your browser to `http://localhost:5173`
+
+3. **Select AI Model**: 
+   - Choose your preferred vision model from the dropdown at the top
+   - If you downloaded a model manually, select it from the list
+   - If the model isn't downloaded, the app will try to download it automatically (may take time)
+
+4. **Upload an Image**: 
+   - Click the upload area or drag and drop an image file
+   - Supported formats: JPG, PNG, GIF, WebP
+
+5. **Generate Story**: 
+   - Click the "✨ Generate Story" button
+   - Wait 30-60 seconds for the story to be generated
+
+6. **View Results**: 
+   - The generated story will appear below the image
+   - Use the copy or download buttons to save your story
+
+### Important Notes
+
+- **First-time model download**: If you haven't downloaded a model manually, the app will download it automatically when you select it. This may take 2-10 minutes and can fail due to network issues. We recommend downloading models manually first (see Step 4 in installation).
+
+- **Model selection**: You can switch between different models in the dropdown. Each model has different quality and speed characteristics.
+
+- **Internet required**: Model downloads require internet. Once downloaded, models work offline.
 
 ## Available Models
 
@@ -207,12 +272,28 @@ The app supports multiple vision models, allowing you to choose based on your ma
 
 ## How It Works
 
-1. You select a vision model from the dropdown (defaults to the smallest recommended model)
-2. When you upload an image, it's converted to base64 format
-3. The image is sent to Ollama along with the selected model and a prompt asking for a creative story
-4. The generated story is displayed in the UI
+### The Process
 
-The app automatically downloads the selected model on first use if it's not already installed.
+1. **Model Selection**: You choose a vision model from the dropdown (defaults to `moondream`, the smallest recommended model)
+
+2. **Image Upload**: When you upload an image, it's converted to a format the AI can understand (base64 encoding)
+
+3. **AI Processing**: 
+   - The image is sent to Ollama (running locally on your machine)
+   - Ollama uses the selected vision model to "see" and understand the image
+   - A prompt asks the AI to create a creative story based on what it sees
+
+4. **Story Generation**: The AI analyzes the image and generates a creative, engaging story
+
+5. **Display Results**: The generated story appears in the UI, where you can copy or download it
+
+### Model Download
+
+- **Manual Download (Recommended)**: Download models using `ollama pull <model-name>` before using the app
+- **Automatic Download**: The app can download models automatically when you select them, but this may fail due to network issues
+- **First Use**: If a model isn't downloaded, the app will attempt to download it automatically (may take 2-10 minutes)
+
+**Best Practice**: Always download models manually first to avoid network timeout issues.
 
 ## Troubleshooting
 
@@ -226,56 +307,73 @@ The app automatically downloads the selected model on first use if it's not alre
 - Check that Ollama is accessible at `http://localhost:11434`
 - On Windows, ensure Windows Firewall allows Ollama
 
-#### Model Download Issues
-**Problem**: Model download fails, times out, or shows "TLS handshake timeout"
+#### Model Download Issues ⚠️
 
-**Common Causes**:
+**Problem**: Model download fails, times out, or shows "TLS handshake timeout" error
+
+This is the most common issue. Here's how to fix it:
+
+**Why this happens:**
 - Slow or unstable internet connection
 - Firewall or proxy blocking Cloudflare R2 storage
 - Network timeout issues
 - Cloudflare CDN temporary issues
 
-**Solutions**:
+**✅ Solutions (try in this order):**
 
-1. **Wait and Retry**: Ollama automatically retries failed downloads. Wait a few minutes and try again.
-
-2. **Manual Download**: Pull the model manually from terminal:
+1. **Manual Download (Recommended)**:
    ```bash
    # macOS/Linux
    ollama pull moondream
    
-   # Windows
+   # Windows PowerShell
    ollama pull moondream
    ```
+   Manual downloads are more reliable than automatic ones.
+
+2. **Wait and Retry**:
+   - Ollama automatically retries failed downloads
+   - Wait 2-3 minutes and try again
+   - Sometimes the issue resolves itself
 
 3. **Check Internet Connection**:
-   - Test your internet speed
-   - Try downloading from a different network (mobile hotspot, different WiFi)
-   - Ensure no VPN is blocking connections
+   - Test your internet speed at [speedtest.net](https://www.speedtest.net)
+   - Try a different network (mobile hotspot, different WiFi)
+   - Disable VPN if active (VPNs can block Cloudflare)
 
-4. **Use Smaller Model First**: Start with the smallest model to test:
+4. **Start with Smallest Model**:
    ```bash
-   ollama pull moondream  # Only ~1.6 GB
+   ollama pull moondream  # Only ~1.6 GB, fastest to download
    ```
+   Once this works, you can try larger models.
 
-5. **Check Firewall/Proxy Settings**:
-   - Temporarily disable firewall to test
-   - If behind a corporate proxy, configure Ollama to use it
-   - Allow Ollama through Windows Firewall (Windows)
+5. **Check Firewall/Proxy**:
+   - **macOS**: System Settings > Network > Firewall (temporarily disable to test)
+   - **Windows**: Windows Defender Firewall (allow Ollama through)
+   - If behind corporate proxy, configure Ollama to use it
 
-6. **Try Different Time**: Cloudflare CDN issues are usually temporary. Try again later.
+6. **Try Different Time**:
+   - Cloudflare CDN issues are usually temporary
+   - Try again in 30-60 minutes
+   - Sometimes downloads work better at different times
 
-7. **Verbose Mode**: See detailed download progress:
+7. **Verbose Mode for Debugging**:
    ```bash
-   ollama pull <model-name> --verbose
+   ollama pull moondream --verbose
    ```
+   This shows detailed download progress and helps identify the issue.
 
-8. **Check Disk Space**: Ensure you have enough free space (models range from ~1.6 GB to ~20 GB)
+8. **Check Disk Space**:
+   - Ensure you have at least 5 GB free space
+   - Models range from ~1.6 GB to ~20 GB
 
-**If download keeps failing**:
+**If download keeps failing:**
 - The app will show a helpful error message with specific solutions
 - Try pulling a different, smaller model first
-- Check Ollama logs for more details
+- Check Ollama logs in the terminal where `ollama serve` is running
+- Consider using a different network (mobile hotspot, different location)
+
+**Pro Tip**: Always download models manually before using the app. It's faster and more reliable than automatic downloads.
 
 #### Slow Generation
 **Problem**: Story generation takes a long time
