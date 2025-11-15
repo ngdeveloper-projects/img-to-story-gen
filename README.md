@@ -6,6 +6,7 @@ A React application that generates creative stories from uploaded images using O
 
 - 📷 Upload images via drag-and-drop or file picker
 - ✨ Generate creative stories based on image content
+- 🤖 **Configurable AI models** - Choose from small to medium-sized models based on your machine's capabilities
 - 💾 Download stories as text files
 - 📋 Copy stories to clipboard
 - 🎨 Beautiful, modern UI
@@ -61,16 +62,29 @@ cd img-to-story-gen
 npm install
 ```
 
-#### Step 4: Pull the Required Model
+#### Step 4: Pull a Vision Model (Optional)
 
-The app uses **llava:7b** (a smaller, optimized model ~4-5 GB) instead of the full llava model (~20 GB) for faster downloads and lower resource usage.
+The app supports multiple vision models ranging from very small (~1.6 GB) to medium (~7.5 GB). You can select your preferred model in the UI dropdown.
 
-The app will automatically pull the model on first use, but you can pre-download it:
+**Recommended models for different setups:**
+
+- **Low-resource machines (4-8 GB RAM)**: `moondream` (~1.6 GB) ⭐
+- **Standard machines (8-16 GB RAM)**: `llava:7b` (~4.5 GB) ⭐
+- **High-resource machines (16+ GB RAM)**: `llava:13b` (~7.5 GB)
+
+The app will automatically pull the selected model on first use, but you can pre-download it:
 ```bash
+# For very small model (recommended for low-resource machines)
+ollama pull moondream
+
+# For small model (recommended for most users)
 ollama pull llava:7b
+
+# For medium model (better quality, requires more resources)
+ollama pull llava:13b
 ```
 
-This model is approximately 4-5 GB and may take a few minutes depending on your internet connection.
+See the [Available Models](#available-models) section for a complete list.
 
 #### Step 5: Run the Application
 
@@ -126,16 +140,29 @@ cd img-to-story-gen
 npm install
 ```
 
-#### Step 4: Pull the Required Model
+#### Step 4: Pull a Vision Model (Optional)
 
-The app uses **llava:7b** (a smaller, optimized model ~4-5 GB) instead of the full llava model (~20 GB) for faster downloads and lower resource usage.
+The app supports multiple vision models ranging from very small (~1.6 GB) to medium (~7.5 GB). You can select your preferred model in the UI dropdown.
 
-The app will automatically pull the model on first use, but you can pre-download it:
+**Recommended models for different setups:**
+
+- **Low-resource machines (4-8 GB RAM)**: `moondream` (~1.6 GB) ⭐
+- **Standard machines (8-16 GB RAM)**: `llava:7b` (~4.5 GB) ⭐
+- **High-resource machines (16+ GB RAM)**: `llava:13b` (~7.5 GB)
+
+The app will automatically pull the selected model on first use, but you can pre-download it:
 ```powershell
+# For very small model (recommended for low-resource machines)
+ollama pull moondream
+
+# For small model (recommended for most users)
 ollama pull llava:7b
+
+# For medium model (better quality, requires more resources)
+ollama pull llava:13b
 ```
 
-This model is approximately 4-5 GB and may take a few minutes depending on your internet connection.
+See the [Available Models](#available-models) section for a complete list.
 
 #### Step 5: Run the Application
 
@@ -149,19 +176,43 @@ Open your browser and navigate to `http://localhost:5173`
 
 ## Usage
 
-1. **Upload an Image**: Click the upload area or drag and drop an image file
-2. **Generate Story**: Click the "✨ Generate Story" button
-3. **View Results**: The generated story will appear below the image
-4. **Copy or Download**: Use the copy or download buttons to save your story
+1. **Select AI Model**: Choose your preferred vision model from the dropdown at the top (see [Available Models](#available-models) for recommendations)
+2. **Upload an Image**: Click the upload area or drag and drop an image file
+3. **Generate Story**: Click the "✨ Generate Story" button
+4. **View Results**: The generated story will appear below the image
+5. **Copy or Download**: Use the copy or download buttons to save your story
+
+**Note**: The first time you use a model, it will be automatically downloaded. This may take a few minutes depending on the model size and your internet connection.
+
+## Available Models
+
+The app supports multiple vision models, allowing you to choose based on your machine's capabilities:
+
+| Model | Size | Min RAM | Description | Recommended For |
+|-------|------|---------|-------------|-----------------|
+| **moondream** ⭐ | ~1.6 GB | 4 GB | Very small, efficient model optimized for edge devices | Low-resource machines, fast inference |
+| **llava:7b** ⭐ | ~4.5 GB | 8 GB | Balanced model for general-purpose visual understanding | Most users, good balance of quality and speed |
+| **bakllava** | ~4.5 GB | 8 GB | Alternative small vision model with good performance | Users wanting to try different architectures |
+| **llava:13b** | ~7.5 GB | 16 GB | Medium-sized model with enhanced accuracy | High-resource machines, better quality |
+| **llava:34b** | ~20 GB | 32 GB | Large model with excellent understanding | High-end machines only, best quality |
+
+⭐ = Recommended models
+
+### Model Selection Tips
+
+- **Start with `moondream`** if you have limited RAM (4-8 GB) or want the fastest inference
+- **Use `llava:7b`** for the best balance between quality and resource usage (recommended for most users)
+- **Try `llava:13b`** if you have 16+ GB RAM and want better story quality
+- **Avoid `llava:34b`** unless you have a high-end machine with 32+ GB RAM
 
 ## How It Works
 
-1. The app uses Ollama's `llava:7b` model (a smaller, optimized version ~4-5 GB), which is a vision-language model capable of understanding images
+1. You select a vision model from the dropdown (defaults to the smallest recommended model)
 2. When you upload an image, it's converted to base64 format
-3. The image is sent to Ollama along with a prompt asking for a creative story
+3. The image is sent to Ollama along with the selected model and a prompt asking for a creative story
 4. The generated story is displayed in the UI
 
-**Note:** We use `llava:7b` instead of the full `llava` model to reduce download size from ~20 GB to ~4-5 GB, making it more accessible for local machines with limited storage.
+The app automatically downloads the selected model on first use if it's not already installed.
 
 ## Troubleshooting
 
@@ -179,10 +230,11 @@ Open your browser and navigate to `http://localhost:5173`
 **Problem**: Model download fails or takes too long
 
 **Solution**:
-- Manually pull the model: `ollama pull llava:7b` (macOS) or `ollama pull llava:7b` (Windows)
+- Manually pull the model: `ollama pull <model-name>` (e.g., `ollama pull moondream` or `ollama pull llava:7b`)
 - Check your internet connection
-- The model is ~4-5 GB, so ensure you have enough disk space
-- If you still have issues, try: `ollama pull llava:7b --verbose` to see detailed download progress
+- Ensure you have enough disk space (models range from ~1.6 GB to ~20 GB)
+- If you still have issues, try: `ollama pull <model-name> --verbose` to see detailed download progress
+- Try a smaller model if downloads keep failing (start with `moondream`)
 
 #### Slow Generation
 **Problem**: Story generation takes a long time
@@ -230,7 +282,10 @@ img-to-story-gen/
 ├── src/
 │   ├── components/
 │   │   ├── ImageUpload.jsx      # Image upload component
-│   │   └── StoryDisplay.jsx     # Story display component
+│   │   ├── StoryDisplay.jsx     # Story display component
+│   │   └── ModelSelector.jsx    # Model selection dropdown
+│   ├── config/
+│   │   └── models.js            # Vision model configuration
 │   ├── services/
 │   │   └── ollamaService.js    # Ollama API integration
 │   ├── App.jsx                  # Main app component
@@ -243,12 +298,43 @@ img-to-story-gen/
 └── README.md                   # This file
 ```
 
+## Customizing Models
+
+You can add your own custom vision models by editing `src/config/models.js`:
+
+```javascript
+export const visionModels = [
+  // ... existing models ...
+  {
+    name: 'your-custom-model',
+    size: '~X.X GB',
+    description: 'Description of your custom model',
+    recommended: false,
+    minRAM: 'X GB',
+  },
+]
+```
+
+**Steps to add a custom model:**
+
+1. Open `src/config/models.js`
+2. Add your model to the `visionModels` array with the required fields:
+   - `name`: The exact model name as it appears in Ollama
+   - `size`: Approximate size (for display purposes)
+   - `description`: Brief description of the model
+   - `recommended`: `true` or `false` (recommended models show a ⭐)
+   - `minRAM`: Minimum RAM requirement
+3. Save the file - the model will appear in the dropdown automatically
+4. Make sure the model is available in Ollama: `ollama pull your-custom-model`
+
+**Note**: Custom models must be vision-capable models that support image input in Ollama.
+
 ## Technologies Used
 
 - **React** - UI framework
 - **Vite** - Build tool and dev server
 - **Ollama** - Local AI model runner
-- **llava:7b** - Smaller vision-language model (~4-5 GB) for image understanding (optimized for local machines)
+- **Configurable Vision Models** - Support for multiple models from very small (moondream ~1.6 GB) to medium (llava:13b ~7.5 GB)
 
 ## Contributing
 

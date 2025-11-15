@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import ImageUpload from './components/ImageUpload'
 import StoryDisplay from './components/StoryDisplay'
+import ModelSelector from './components/ModelSelector'
+import { getDefaultModel } from './config/models'
 import './App.css'
 
 function App() {
@@ -8,6 +10,7 @@ function App() {
   const [story, setStory] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [selectedModel, setSelectedModel] = useState(getDefaultModel())
 
   const handleImageUpload = (file) => {
     setImage(file)
@@ -37,12 +40,18 @@ function App() {
         <p>Upload an image and let AI create a story for you!</p>
       </header>
 
+      <ModelSelector
+        selectedModel={selectedModel}
+        onModelChange={setSelectedModel}
+      />
+
       <ImageUpload
         onImageUpload={handleImageUpload}
         onStoryGenerated={handleStoryGenerated}
         onError={handleError}
         onLoading={handleLoading}
         currentImage={image}
+        selectedModel={selectedModel}
       />
 
       {error && (

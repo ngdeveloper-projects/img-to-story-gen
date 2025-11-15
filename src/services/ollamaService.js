@@ -1,14 +1,17 @@
 import { Ollama } from 'ollama'
+import { getModelInfo, getDefaultModel } from '../config/models'
 
 // Initialize Ollama client - defaults to http://localhost:11434
 const ollama = new Ollama()
 
 /**
  * Ensures the required model is available, pulling it if necessary
- * Uses smaller models to reduce download size and resource requirements
+ * @param {string} modelName - Name of the model to ensure is available
  */
-async function ensureModel(modelName = 'llava:7b') {
+async function ensureModel(modelName) {
   try {
+    const modelInfo = getModelInfo(modelName)
+    
     // Check if model exists
     const models = await ollama.list()
     const modelExists = models.models.some((m) => 
@@ -17,7 +20,7 @@ async function ensureModel(modelName = 'llava:7b') {
 
     if (!modelExists) {
       console.log(`Model ${modelName} not found. Pulling model...`)
-      console.log(`This model is approximately 4-5 GB. Please be patient...`)
+      console.log(`Model size: ${modelInfo.size}. Please be patient...`)
       // Pull the model
       await ollama.pull({ model: modelName })
       console.log(`Model ${modelName} pulled successfully!`)
@@ -48,25 +51,28 @@ function imageToBase64(file) {
 
 /**
  * Generates a story based on the uploaded image
- * Uses llava:7b model (smaller, ~4-5GB) instead of full llava (~20GB)
+ * @param {File} imageFile - The image file to analyze
+ * @param {string} modelName - Optional model name (defaults to configured default)
+ * @returns {Promise<string>} The generated story
  */
-export async function generateStory(imageFile) {
+export async function generateStory(imageFile, modelName = null) {
   try {
-    // Use the smaller 7B model instead of the default large model
-    const modelName = 'llava:7b'
+    // Use provided model or default from config
+    const selectedModel = modelName || getDefaultModel()
+    const modelInfo = getModelInfo(selectedModel)
     
     // First, ensure the model is available
-    await ensureModel(modelName)
+    await ensureModel(selectedModel)
 
     // Convert image to base64
     const imageBase64 = await imageToBase64(imageFile)
 
-    // Use llava:7b model to analyze the image and generate a story
+    // Generate story prompt
     const prompt = `Look at this image and create a creative, engaging story based on what you see. The story should be 3-5 paragraphs long, descriptive, and imaginative. Make it interesting and captivating.`
 
     // Use chat API for vision models
     const response = await ollama.chat({
-      model: modelName,
+      model: selectedModel,
       messages: [
         {
           role: 'user',

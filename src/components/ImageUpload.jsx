@@ -8,6 +8,7 @@ function ImageUpload({
   onError,
   onLoading,
   currentImage,
+  selectedModel,
 }) {
   const [preview, setPreview] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -40,7 +41,7 @@ function ImageUpload({
     onLoading(true)
 
     try {
-      const story = await generateStory(currentImage)
+      const story = await generateStory(currentImage, selectedModel)
       onStoryGenerated(story)
     } catch (error) {
       console.error('Error generating story:', error)
