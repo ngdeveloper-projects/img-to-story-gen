@@ -226,15 +226,56 @@ The app automatically downloads the selected model on first use if it's not alre
 - Check that Ollama is accessible at `http://localhost:11434`
 - On Windows, ensure Windows Firewall allows Ollama
 
-#### Model Not Found
-**Problem**: Model download fails or takes too long
+#### Model Download Issues
+**Problem**: Model download fails, times out, or shows "TLS handshake timeout"
 
-**Solution**:
-- Manually pull the model: `ollama pull <model-name>` (e.g., `ollama pull moondream` or `ollama pull llava:7b`)
-- Check your internet connection
-- Ensure you have enough disk space (models range from ~1.6 GB to ~20 GB)
-- If you still have issues, try: `ollama pull <model-name> --verbose` to see detailed download progress
-- Try a smaller model if downloads keep failing (start with `moondream`)
+**Common Causes**:
+- Slow or unstable internet connection
+- Firewall or proxy blocking Cloudflare R2 storage
+- Network timeout issues
+- Cloudflare CDN temporary issues
+
+**Solutions**:
+
+1. **Wait and Retry**: Ollama automatically retries failed downloads. Wait a few minutes and try again.
+
+2. **Manual Download**: Pull the model manually from terminal:
+   ```bash
+   # macOS/Linux
+   ollama pull moondream
+   
+   # Windows
+   ollama pull moondream
+   ```
+
+3. **Check Internet Connection**:
+   - Test your internet speed
+   - Try downloading from a different network (mobile hotspot, different WiFi)
+   - Ensure no VPN is blocking connections
+
+4. **Use Smaller Model First**: Start with the smallest model to test:
+   ```bash
+   ollama pull moondream  # Only ~1.6 GB
+   ```
+
+5. **Check Firewall/Proxy Settings**:
+   - Temporarily disable firewall to test
+   - If behind a corporate proxy, configure Ollama to use it
+   - Allow Ollama through Windows Firewall (Windows)
+
+6. **Try Different Time**: Cloudflare CDN issues are usually temporary. Try again later.
+
+7. **Verbose Mode**: See detailed download progress:
+   ```bash
+   ollama pull <model-name> --verbose
+   ```
+
+8. **Check Disk Space**: Ensure you have enough free space (models range from ~1.6 GB to ~20 GB)
+
+**If download keeps failing**:
+- The app will show a helpful error message with specific solutions
+- Try pulling a different, smaller model first
+- Check Ollama logs for more details
 
 #### Slow Generation
 **Problem**: Story generation takes a long time

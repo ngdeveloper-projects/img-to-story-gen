@@ -21,12 +21,39 @@ async function ensureModel(modelName) {
     if (!modelExists) {
       console.log(`Model ${modelName} not found. Pulling model...`)
       console.log(`Model size: ${modelInfo.size}. Please be patient...`)
-      // Pull the model
-      await ollama.pull({ model: modelName })
-      console.log(`Model ${modelName} pulled successfully!`)
+      console.log(`Note: If download fails due to network issues, try pulling manually: ollama pull ${modelName}`)
+      
+      try {
+        // Pull the model with a longer timeout
+        await ollama.pull({ model: modelName })
+        console.log(`Model ${modelName} pulled successfully!`)
+      } catch (pullError) {
+        // Check for network-related errors
+        const errorMsg = pullError.message || String(pullError)
+        if (errorMsg.includes('timeout') || errorMsg.includes('TLS') || errorMsg.includes('network') || errorMsg.includes('connection')) {
+          throw new Error(
+            `Network error while downloading model. This is usually due to:\n` +
+            `1. Slow or unstable internet connection\n` +
+            `2. Firewall/proxy blocking the connection\n` +
+            `3. Cloudflare CDN issues\n\n` +
+            `Solutions:\n` +
+            `- Try again later (Ollama will retry automatically)\n` +
+            `- Pull the model manually: ollama pull ${modelName}\n` +
+            `- Check your internet connection\n` +
+            `- Try a smaller model first (moondream ~1.6GB)`
+          )
+        }
+        throw pullError
+      }
     }
   } catch (error) {
     console.error('Error ensuring model:', error)
+    
+    // Provide more specific error messages
+    if (error.message && error.message.includes('Network error')) {
+      throw error // Re-throw our custom network error
+    }
+    
     throw new Error(
       `Failed to ensure model is available. Make sure Ollama is running. Error: ${error.message}`
     )
