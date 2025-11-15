@@ -63,12 +63,14 @@ npm install
 
 #### Step 4: Pull the Required Model
 
+The app uses **llava:7b** (a smaller, optimized model ~4-5 GB) instead of the full llava model (~20 GB) for faster downloads and lower resource usage.
+
 The app will automatically pull the model on first use, but you can pre-download it:
 ```bash
-ollama pull llava
+ollama pull llava:7b
 ```
 
-This may take a few minutes depending on your internet connection.
+This model is approximately 4-5 GB and may take a few minutes depending on your internet connection.
 
 #### Step 5: Run the Application
 
@@ -126,12 +128,14 @@ npm install
 
 #### Step 4: Pull the Required Model
 
+The app uses **llava:7b** (a smaller, optimized model ~4-5 GB) instead of the full llava model (~20 GB) for faster downloads and lower resource usage.
+
 The app will automatically pull the model on first use, but you can pre-download it:
 ```powershell
-ollama pull llava
+ollama pull llava:7b
 ```
 
-This may take a few minutes depending on your internet connection.
+This model is approximately 4-5 GB and may take a few minutes depending on your internet connection.
 
 #### Step 5: Run the Application
 
@@ -152,10 +156,12 @@ Open your browser and navigate to `http://localhost:5173`
 
 ## How It Works
 
-1. The app uses Ollama's `llava` model, which is a vision-language model capable of understanding images
+1. The app uses Ollama's `llava:7b` model (a smaller, optimized version ~4-5 GB), which is a vision-language model capable of understanding images
 2. When you upload an image, it's converted to base64 format
 3. The image is sent to Ollama along with a prompt asking for a creative story
 4. The generated story is displayed in the UI
+
+**Note:** We use `llava:7b` instead of the full `llava` model to reduce download size from ~20 GB to ~4-5 GB, making it more accessible for local machines with limited storage.
 
 ## Troubleshooting
 
@@ -173,9 +179,10 @@ Open your browser and navigate to `http://localhost:5173`
 **Problem**: Model download fails or takes too long
 
 **Solution**:
-- Manually pull the model: `ollama pull llava`
+- Manually pull the model: `ollama pull llava:7b` (macOS) or `ollama pull llava:7b` (Windows)
 - Check your internet connection
-- The model is ~4GB, so ensure you have enough disk space
+- The model is ~4-5 GB, so ensure you have enough disk space
+- If you still have issues, try: `ollama pull llava:7b --verbose` to see detailed download progress
 
 #### Slow Generation
 **Problem**: Story generation takes a long time
@@ -241,7 +248,7 @@ img-to-story-gen/
 - **React** - UI framework
 - **Vite** - Build tool and dev server
 - **Ollama** - Local AI model runner
-- **llava** - Vision-language model for image understanding
+- **llava:7b** - Smaller vision-language model (~4-5 GB) for image understanding (optimized for local machines)
 
 ## Contributing
 

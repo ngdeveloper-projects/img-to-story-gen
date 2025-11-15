@@ -5,15 +5,19 @@ const ollama = new Ollama()
 
 /**
  * Ensures the required model is available, pulling it if necessary
+ * Uses smaller models to reduce download size and resource requirements
  */
-async function ensureModel(modelName = 'llava') {
+async function ensureModel(modelName = 'llava:7b') {
   try {
     // Check if model exists
     const models = await ollama.list()
-    const modelExists = models.models.some((m) => m.name.includes(modelName))
+    const modelExists = models.models.some((m) => 
+      m.name === modelName || m.name.includes(modelName.split(':')[0])
+    )
 
     if (!modelExists) {
       console.log(`Model ${modelName} not found. Pulling model...`)
+      console.log(`This model is approximately 4-5 GB. Please be patient...`)
       // Pull the model
       await ollama.pull({ model: modelName })
       console.log(`Model ${modelName} pulled successfully!`)
@@ -44,21 +48,25 @@ function imageToBase64(file) {
 
 /**
  * Generates a story based on the uploaded image
+ * Uses llava:7b model (smaller, ~4-5GB) instead of full llava (~20GB)
  */
 export async function generateStory(imageFile) {
   try {
+    // Use the smaller 7B model instead of the default large model
+    const modelName = 'llava:7b'
+    
     // First, ensure the model is available
-    await ensureModel('llava')
+    await ensureModel(modelName)
 
     // Convert image to base64
     const imageBase64 = await imageToBase64(imageFile)
 
-    // Use llava model to analyze the image and generate a story
+    // Use llava:7b model to analyze the image and generate a story
     const prompt = `Look at this image and create a creative, engaging story based on what you see. The story should be 3-5 paragraphs long, descriptive, and imaginative. Make it interesting and captivating.`
 
     // Use chat API for vision models
     const response = await ollama.chat({
-      model: 'llava',
+      model: modelName,
       messages: [
         {
           role: 'user',
